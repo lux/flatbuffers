@@ -37,7 +37,7 @@ __init(i:number, bb:flatbuffers.ByteBuffer):Attacker {
  * @returns Attacker
  */
 static getRootAsAttacker(bb:flatbuffers.ByteBuffer, obj?:Attacker):Attacker {
-  return (obj || new Attacker).__init(bb.readInt32(bb.position()) + bb.position(), bb);
+  return (obj || new Attacker()).__init(bb.readInt32(bb.position()) + bb.position(), bb);
 };
 
 /**
@@ -46,7 +46,8 @@ static getRootAsAttacker(bb:flatbuffers.ByteBuffer, obj?:Attacker):Attacker {
  * @returns Attacker
  */
 static getSizePrefixedRootAsAttacker(bb:flatbuffers.ByteBuffer, obj?:Attacker):Attacker {
-  return (obj || new Attacker).__init(bb.readInt32(bb.position()) + bb.position(), bb);
+  bb.setPosition(bb.position() + flatbuffers.SIZE_PREFIX_LENGTH);
+  return (obj || new Attacker()).__init(bb.readInt32(bb.position()) + bb.position(), bb);
 };
 
 /**
@@ -230,7 +231,7 @@ __init(i:number, bb:flatbuffers.ByteBuffer):Movie {
  * @returns Movie
  */
 static getRootAsMovie(bb:flatbuffers.ByteBuffer, obj?:Movie):Movie {
-  return (obj || new Movie).__init(bb.readInt32(bb.position()) + bb.position(), bb);
+  return (obj || new Movie()).__init(bb.readInt32(bb.position()) + bb.position(), bb);
 };
 
 /**
@@ -239,7 +240,8 @@ static getRootAsMovie(bb:flatbuffers.ByteBuffer, obj?:Movie):Movie {
  * @returns Movie
  */
 static getSizePrefixedRootAsMovie(bb:flatbuffers.ByteBuffer, obj?:Movie):Movie {
-  return (obj || new Movie).__init(bb.readInt32(bb.position()) + bb.position(), bb);
+  bb.setPosition(bb.position() + flatbuffers.SIZE_PREFIX_LENGTH);
+  return (obj || new Movie()).__init(bb.readInt32(bb.position()) + bb.position(), bb);
 };
 
 /**
@@ -256,21 +258,6 @@ static bufferHasIdentifier(bb:flatbuffers.ByteBuffer):boolean {
 mainCharacterType():Character {
   var offset = this.bb!.__offset(this.bb_pos, 4);
   return offset ? /**  */ (this.bb!.readUint8(this.bb_pos + offset)) : Character.NONE;
-};
-
-/**
- * @param Character value
- * @returns boolean
- */
-mutate_main_character_type(value:Character):boolean {
-  var offset = this.bb!.__offset(this.bb_pos, 4);
-
-  if (offset === 0) {
-    return false;
-  }
-
-  this.bb!.writeUint8(this.bb_pos + offset, value);
-  return true;
 };
 
 /**

@@ -25,9 +25,9 @@ NamespaceA.NamespaceB.EnumInNestedNS = {
  * @enum {string}
  */
 NamespaceA.NamespaceB.EnumInNestedNSName = {
-  0: 'A',
-  1: 'B',
-  2: 'C'
+  '0': 'A',
+  '1': 'B',
+  '2': 'C'
 };
 
 /**
@@ -71,6 +71,7 @@ NamespaceA.NamespaceB.TableInNestedNS.getRootAsTableInNestedNS = function(bb, ob
  * @returns {NamespaceA.NamespaceB.TableInNestedNS}
  */
 NamespaceA.NamespaceB.TableInNestedNS.getSizePrefixedRootAsTableInNestedNS = function(bb, obj) {
+  bb.setPosition(bb.position() + flatbuffers.SIZE_PREFIX_LENGTH);
   return (obj || new NamespaceA.NamespaceB.TableInNestedNS).__init(bb.readInt32(bb.position()) + bb.position(), bb);
 };
 

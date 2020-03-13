@@ -31,7 +31,7 @@ class PhpGenerator : public BaseGenerator {
  public:
   PhpGenerator(const Parser &parser, const std::string &path,
                const std::string &file_name)
-      : BaseGenerator(parser, path, file_name, "\\", "\\") {}
+      : BaseGenerator(parser, path, file_name, "\\", "\\", "php") {}
   bool generate() {
     if (!GenerateEnums()) return false;
     if (!GenerateStructs()) return false;
@@ -232,7 +232,6 @@ class PhpGenerator : public BaseGenerator {
   // Get the value of a table's scalar.
   void GetScalarFieldOfTable(const FieldDef &field, std::string *code_ptr) {
     std::string &code = *code_ptr;
-    std::string getter = GenGetter(field.value.type);
 
     code += Indent + "/**\n";
     code += Indent + " * @return " + GenTypeGet(field.value.type) + "\n";
@@ -827,7 +826,8 @@ class PhpGenerator : public BaseGenerator {
     code += Indent + "private static $names = array(\n";
     for (auto it = enum_def.Vals().begin(); it != enum_def.Vals().end(); ++it) {
       auto &ev = **it;
-      code += Indent + Indent + enum_def.name + "::" + ev.name + "=>" + "\"" + ev.name + "\",\n";
+      code += Indent + Indent + enum_def.name + "::" + ev.name + "=>" + "\"" +
+              ev.name + "\",\n";
     }
 
     code += Indent + ");\n\n";
@@ -860,15 +860,15 @@ class PhpGenerator : public BaseGenerator {
   }
 
   static std::string GenTypeBasic(const Type &type) {
-    static const char *ctypename[] = {
     // clang-format off
-        #define FLATBUFFERS_TD(ENUM, IDLTYPE, \
-            CTYPE, JTYPE, GTYPE, NTYPE, PTYPE, RTYPE) \
-            #NTYPE,
-                FLATBUFFERS_GEN_TYPES(FLATBUFFERS_TD)
-        #undef FLATBUFFERS_TD
-      // clang-format on
+    static const char *ctypename[] = {
+      #define FLATBUFFERS_TD(ENUM, IDLTYPE, \
+              CTYPE, JTYPE, GTYPE, NTYPE, ...) \
+        #NTYPE,
+        FLATBUFFERS_GEN_TYPES(FLATBUFFERS_TD)
+      #undef FLATBUFFERS_TD
     };
+    // clang-format on
     return ctypename[type.base_type];
   }
 

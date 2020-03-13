@@ -6,15 +6,17 @@ namespace NamespaceC
 {
 
 using global::System;
+using global::System.Collections.Generic;
 using global::FlatBuffers;
 
 public struct TableInC : IFlatbufferObject
 {
   private Table __p;
   public ByteBuffer ByteBuffer { get { return __p.bb; } }
+  public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_1_12_0(); }
   public static TableInC GetRootAsTableInC(ByteBuffer _bb) { return GetRootAsTableInC(_bb, new TableInC()); }
-  public static TableInC GetRootAsTableInC(ByteBuffer _bb, TableInC obj) { FlatBufferConstants.FLATBUFFERS_1_11_1(); return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
-  public void __init(int _i, ByteBuffer _bb) { __p.bb_pos = _i; __p.bb = _bb; }
+  public static TableInC GetRootAsTableInC(ByteBuffer _bb, TableInC obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
+  public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public TableInC __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
   public NamespaceA.TableInFirstNS? ReferToA1 { get { int o = __p.__offset(4); return o != 0 ? (NamespaceA.TableInFirstNS?)(new NamespaceA.TableInFirstNS()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
@@ -36,7 +38,38 @@ public struct TableInC : IFlatbufferObject
     int o = builder.EndTable();
     return new Offset<NamespaceC.TableInC>(o);
   }
+  public TableInCT UnPack() {
+    var _o = new TableInCT();
+    this.UnPackTo(_o);
+    return _o;
+  }
+  public void UnPackTo(TableInCT _o) {
+    _o.ReferToA1 = this.ReferToA1.HasValue ? this.ReferToA1.Value.UnPack() : null;
+    _o.ReferToA2 = this.ReferToA2.HasValue ? this.ReferToA2.Value.UnPack() : null;
+  }
+  public static Offset<NamespaceC.TableInC> Pack(FlatBufferBuilder builder, TableInCT _o) {
+    if (_o == null) return default(Offset<NamespaceC.TableInC>);
+    var _refer_to_a1 = _o.ReferToA1 == null ? default(Offset<NamespaceA.TableInFirstNS>) : NamespaceA.TableInFirstNS.Pack(builder, _o.ReferToA1);
+    var _refer_to_a2 = _o.ReferToA2 == null ? default(Offset<NamespaceA.SecondTableInA>) : NamespaceA.SecondTableInA.Pack(builder, _o.ReferToA2);
+    return CreateTableInC(
+      builder,
+      _refer_to_a1,
+      _refer_to_a2);
+  }
 };
+
+public class TableInCT
+{
+  [Newtonsoft.Json.JsonProperty("refer_to_a1")]
+  public NamespaceA.TableInFirstNST ReferToA1 { get; set; }
+  [Newtonsoft.Json.JsonProperty("refer_to_a2")]
+  public NamespaceA.SecondTableInAT ReferToA2 { get; set; }
+
+  public TableInCT() {
+    this.ReferToA1 = null;
+    this.ReferToA2 = null;
+  }
+}
 
 
 }
